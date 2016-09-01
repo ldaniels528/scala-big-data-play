@@ -7,7 +7,7 @@ val slf4jVersion = "1.7.21"
 val stormVersion = "1.0.2"
 val twitterBijection = "0.9.2"
 
-name := "scala-kafka-storm-demo"
+name := "scala-storm-kafka-demo"
 
 organization := "com.github.ldaniels528"
 

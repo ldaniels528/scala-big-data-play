@@ -1,5 +1,5 @@
 # Scala Storm-Kafka Demo
-A Simple Kafka-Storm demo written in Scala.
+A simple Storm-Kafka demo written in Scala.
 
 The purpose of the sample is to demonstrate a simple Storm spout that produces random (fake)
 stock quotes, which are then persisted to Kafka via the native `KafkaBolt` class.
