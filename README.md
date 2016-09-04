@@ -1,21 +1,37 @@
-# Scala Storm-Kafka Demo
-A simple Storm-Kafka demo written in Scala.
-
-The purpose of the sample is to demonstrate a simple Storm spout that produces random (fake)
-stock quotes, which are then persisted to Kafka via the native `KafkaBolt` class.
+# Scala Big Data Demo
+Simple demos written in Scala for Spark, Storm (and soon others).
 
 ### Build Requirements
 
 * [SBT 0.13.x] (http://www.scala-sbt.org/download.html)
 
-### Running the demo
+### Running the Spark Demo
 
-To run this demo, simple execute the following command:
+To run the Spark Streaming demo, simple execute the following command:
 
+```bash
+    sbt clean "project spark_kafka" run
 ```
-    sbt clean run
+
+If though, your Kafka brokers are not running locally (e.g. localhost), do the following instead.
+In the example, below replace "dev111" with the hostname and port of your Kafka broker.
+
+```bash
+    sbt clean "project spark_kafka" "run dev111:9091"
 ```
 
-**NOTE:** The Kafka `bootstrap.servers` property is currently hard-coded in 
-`com.github.ldaniels528.demo.KafkaStormDemoApp`. You'll have to change this in order
-for the demo to work properly.
+### Running the Storm Demo
+
+To run the Storm demo, simple execute the following command:
+
+```bash
+    sbt clean "project storm_kafka" run
+```
+
+If though, your Kafka brokers are not running locally (e.g. localhost), do the following instead.
+In the example, below replace "dev111" with the hostname and port of your Kafka broker.
+
+```bash
+    sbt clean "project storm_kafka" "run dev111:9091"
+```
+
