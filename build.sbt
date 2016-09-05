@@ -3,6 +3,7 @@ import sbt._
 val apacheCurator = "3.2.0"
 val avroVersion = "1.8.1"
 val flinkVersion = "1.1.1"
+val hadoopVersion = "2.7.3"
 val kafkaVersion = "0.10.0.1"
 val slf4jVersion = "1.7.21"
 val sparkVersion = "2.0.0"
@@ -65,6 +66,23 @@ lazy val flink_kafka_producer = (project in file("./flink-kafka-producer"))
       "org.apache.flink" %% "flink-clients" % flinkVersion,
       "org.apache.flink" %% "flink-connector-kafka-0.9" % flinkVersion,
       "org.apache.flink" %% "flink-streaming-scala" % flinkVersion
+    ))
+
+lazy val hdfs_copy = (project in file("./hdfs"))
+  .aggregate(commons)
+  .dependsOn(commons)
+  .settings(logging_dependencies)
+  .settings(
+    name := "hdfs-copy-demo",
+    organization := "com.github.ldaniels528",
+    version := "0.0.1",
+    scalaVersion := myScalaVersion,
+    scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
+    javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
+    libraryDependencies ++= Seq(
+      "org.apache.hadoop" % "hadoop-client" % hadoopVersion,
+      "org.apache.hadoop" % "hadoop-common" % hadoopVersion,
+      "org.apache.hadoop" % "hadoop-hdfs" % hadoopVersion
     ))
 
 lazy val spark_kafka_consumer = (project in file("./spark-kafka-consumer"))

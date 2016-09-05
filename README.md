@@ -5,6 +5,12 @@ Simple demos written in Scala for Spark, Storm, Flink (and soon others).
 
 * [SBT 0.13.x] (http://www.scala-sbt.org/download.html)
 
+### Running the Hadoop-Copy Demo
+
+```bash
+    sbt clean "project hdfs_copy" "run hdfs://localhost:19000 stockQuotes.js 100000"
+```
+
 ### Running the Spark-Kafka Consumer-Producer Demo
 
 To run the Spark-Kafka streaming consumer-producer demo, simple execute the following command:
