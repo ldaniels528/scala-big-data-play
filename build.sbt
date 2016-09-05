@@ -38,7 +38,7 @@ lazy val kafka_dependencies = Seq(
     "org.apache.kafka" % "kafka-clients" % kafkaVersion
   ))
 
-lazy val services = (project in file("./services"))
+lazy val commons = (project in file("./services"))
   .settings(logging_dependencies)
   .settings(kafka_dependencies)
   .settings(
@@ -49,9 +49,9 @@ lazy val services = (project in file("./services"))
     scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
   )
 
-lazy val flink_kafka = (project in file("./flink-kafka"))
-  .aggregate(services)
-  .dependsOn(services)
+lazy val flink_kafka_producer = (project in file("./flink-kafka-producer"))
+  .aggregate(commons)
+  .dependsOn(commons)
   .settings(logging_dependencies)
   .settings(kafka_dependencies)
   .settings(
@@ -67,13 +67,13 @@ lazy val flink_kafka = (project in file("./flink-kafka"))
       "org.apache.flink" %% "flink-streaming-scala" % flinkVersion
     ))
 
-lazy val spark_kafka = (project in file("./spark-kafka"))
-  .aggregate(services)
-  .dependsOn(services)
+lazy val spark_kafka_consumer = (project in file("./spark-kafka-consumer"))
+  .aggregate(commons)
+  .dependsOn(commons)
   .settings(logging_dependencies)
   .settings(kafka_dependencies)
   .settings(
-    name := "spark-kafka-demo",
+    name := "spark-kafka-consumer",
     organization := "com.github.ldaniels528",
     version := "0.0.1",
     scalaVersion := myScalaVersion,
@@ -85,13 +85,31 @@ lazy val spark_kafka = (project in file("./spark-kafka"))
       "org.apache.spark" %% "spark-streaming-kafka" % sparkKafkaVersion
     ))
 
-lazy val storm_kafka = (project in file("./storm-kafka"))
-  .aggregate(services)
-  .dependsOn(services)
+lazy val spark_kafka_producer = (project in file("./spark-kafka-producer"))
+  .aggregate(commons)
+  .dependsOn(commons)
   .settings(logging_dependencies)
   .settings(kafka_dependencies)
   .settings(
-    name := "storm-kafka-demo",
+    name := "spark-kafka-producer",
+    organization := "com.github.ldaniels528",
+    version := "0.0.1",
+    scalaVersion := myScalaVersion,
+    scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
+    javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
+    libraryDependencies ++= Seq(
+      "org.apache.spark" %% "spark-core" % sparkVersion,
+      "org.apache.spark" %% "spark-streaming" % sparkVersion,
+      "org.apache.spark" %% "spark-streaming-kafka" % sparkKafkaVersion
+    ))
+
+lazy val storm_kafka_producer = (project in file("./storm-kafka-producer"))
+  .aggregate(commons)
+  .dependsOn(commons)
+  .settings(logging_dependencies)
+  .settings(kafka_dependencies)
+  .settings(
+    name := "storm-kafka-producer",
     organization := "com.github.ldaniels528",
     version := "0.0.1",
     scalaVersion := myScalaVersion,
@@ -103,4 +121,4 @@ lazy val storm_kafka = (project in file("./storm-kafka"))
     ))
 
 // loads the jvm project at sbt startup
-onLoad in Global := (Command.process("project spark_kafka", _: State)) compose (onLoad in Global).value
+onLoad in Global := (Command.process("project spark_kafka_producer", _: State)) compose (onLoad in Global).value
