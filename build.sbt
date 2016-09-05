@@ -1,6 +1,6 @@
 import sbt._
 
-val apacheCurator = "3.1.0"
+val apacheCurator = "3.2.0"
 val avroVersion = "1.8.1"
 val kafkaVersion = "0.10.0.1"
 val slf4jVersion = "1.7.21"
@@ -10,6 +10,13 @@ val stormVersion = "1.0.2"
 val twitterBijection = "0.9.2"
 
 val myScalaVersion = "2.11.8"
+
+lazy val avro_dependencies = Seq(
+  libraryDependencies ++= Seq(
+    "com.twitter" %% "bijection-core" % twitterBijection,
+    "com.twitter" %% "bijection-avro" % twitterBijection,
+    "org.apache.avro" % "avro" % avroVersion
+  ))
 
 lazy val logging_dependencies = Seq(
   libraryDependencies ++= Seq(
@@ -29,12 +36,7 @@ lazy val kafka_dependencies = Seq(
     //
     // Kafka Dependencies
     "org.apache.kafka" %% "kafka" % kafkaVersion exclude("org.slf4j", "slf4j-log4j12"),
-    "org.apache.kafka" % "kafka-clients" % kafkaVersion,
-    //
-    // Avro Dependencies
-    "com.twitter" %% "bijection-core" % twitterBijection,
-    "com.twitter" %% "bijection-avro" % twitterBijection,
-    "org.apache.avro" % "avro" % avroVersion
+    "org.apache.kafka" % "kafka-clients" % kafkaVersion
   ))
 
 lazy val root = (project in file("."))
@@ -69,7 +71,7 @@ lazy val storm_kafka = (project in file("./storm-kafka"))
     scalaVersion := myScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
     javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
-    // Kafka-Storm Dependencies
+    // Storm-Kafka Dependencies
     libraryDependencies ++= Seq(
       //
       // Storm Dependencies
@@ -89,7 +91,7 @@ lazy val spark_kafka = (project in file("./spark-kafka"))
     scalaVersion := myScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
     javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
-    // Kafka-Storm Dependencies
+    // Spark-Kafka Dependencies
     libraryDependencies ++= Seq(
       //
       // Spark Dependencies
@@ -99,4 +101,4 @@ lazy val spark_kafka = (project in file("./spark-kafka"))
     ))
 
 // loads the jvm project at sbt startup
-onLoad in Global := (Command.process("project root", _: State)) compose (onLoad in Global).value
+onLoad in Global := (Command.process("project spark_kafka", _: State)) compose (onLoad in Global).value
