@@ -12,10 +12,15 @@ val twitterBijection = "0.9.2"
 
 val myScalaVersion = "2.11.8"
 
+lazy val avro_dependencies = Seq(
+  libraryDependencies ++= Seq(
+    "com.twitter" %% "bijection-core" % twitterBijection,
+    "com.twitter" %% "bijection-avro" % twitterBijection,
+    "org.apache.avro" % "avro" % avroVersion
+  ))
+
 lazy val logging_dependencies = Seq(
   libraryDependencies ++= Seq(
-    //
-    // General Dependencies
     "log4j" % "log4j" % "1.2.17" % "test",
     "org.slf4j" % "slf4j-api" % slf4jVersion,
     "org.slf4j" % "slf4j-log4j12" % slf4jVersion % "test"
@@ -53,6 +58,7 @@ lazy val flink_kafka = (project in file("./flink-kafka"))
   .aggregate(services)
   .dependsOn(services)
   .settings(logging_dependencies)
+  .settings(kafka_dependencies)
   .settings(
     name := "flink-kafka-demo",
     organization := "com.github.ldaniels528",
@@ -60,38 +66,10 @@ lazy val flink_kafka = (project in file("./flink-kafka"))
     scalaVersion := myScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
     javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
-    // Flink-Kafka Dependencies
     libraryDependencies ++= Seq(
-      //
-      // Flink Dependencies
-      "org.apache.flink" % "flink-core" % flinkVersion,
       "org.apache.flink" %% "flink-clients" % flinkVersion,
       "org.apache.flink" %% "flink-connector-kafka-0.9" % flinkVersion,
-      "org.apache.flink" %% "flink-streaming-scala" % flinkVersion,
-      //
-      // Kafka Dependencies
-      "org.apache.kafka" %% "kafka" % "0.9.0.1" exclude("org.slf4j", "slf4j-log4j12"),
-      "org.apache.kafka" % "kafka-clients" % "0.9.0.1"
-    ))
-
-lazy val storm_kafka = (project in file("./storm-kafka"))
-  .aggregate(services)
-  .dependsOn(services)
-  .settings(logging_dependencies)
-  .settings(kafka_dependencies)
-  .settings(
-    name := "storm-kafka-demo",
-    organization := "com.github.ldaniels528",
-    version := "0.0.1",
-    scalaVersion := myScalaVersion,
-    scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
-    javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
-    // Storm-Kafka Dependencies
-    libraryDependencies ++= Seq(
-      //
-      // Storm Dependencies
-      "org.apache.storm" % "storm-core" % stormVersion,
-      "org.apache.storm" % "storm-kafka" % stormVersion
+      "org.apache.flink" %% "flink-streaming-scala" % flinkVersion
     ))
 
 lazy val spark_kafka = (project in file("./spark-kafka"))
@@ -106,13 +84,27 @@ lazy val spark_kafka = (project in file("./spark-kafka"))
     scalaVersion := myScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
     javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
-    // Spark-Kafka Dependencies
     libraryDependencies ++= Seq(
-      //
-      // Spark Dependencies
       "org.apache.spark" %% "spark-core" % sparkVersion,
       "org.apache.spark" %% "spark-streaming" % sparkVersion,
       "org.apache.spark" %% "spark-streaming-kafka" % sparkKafkaVersion
+    ))
+
+lazy val storm_kafka = (project in file("./storm-kafka"))
+  .aggregate(services)
+  .dependsOn(services)
+  .settings(logging_dependencies)
+  .settings(kafka_dependencies)
+  .settings(
+    name := "storm-kafka-demo",
+    organization := "com.github.ldaniels528",
+    version := "0.0.1",
+    scalaVersion := myScalaVersion,
+    scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
+    javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
+    libraryDependencies ++= Seq(
+      "org.apache.storm" % "storm-core" % stormVersion,
+      "org.apache.storm" % "storm-kafka" % stormVersion
     ))
 
 // loads the jvm project at sbt startup

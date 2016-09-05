@@ -32,9 +32,9 @@ object SparkKafkaDemoApp {
     */
   def producerDemo(args: Array[String]) = {
     // get the input parameters
-    val (brokers, topic) = (
-      args.maybe(0) getOrElse "localhost:9092",
-      args.maybe(1) getOrElse defaultTopic)
+    val Seq(topic, brokers, _*) = Seq(defaultTopic, "localhost:9092") zip (0 to 1) map { case (default, n) =>
+      args.maybe(n) getOrElse default
+    }
 
     // get the Kafka producer configuration
     val kafkaProps = KafkaProperties.getKafkaProducerConfig(brokers)

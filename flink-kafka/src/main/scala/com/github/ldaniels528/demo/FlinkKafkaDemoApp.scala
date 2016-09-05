@@ -26,10 +26,9 @@ object FlinkKafkaDemoApp {
     */
   def producerKafka2KafkaDemo(args: Array[String]) = {
     // get the input parameters
-    val (brokers, topic, appArgs) = (
-      args.maybe(0) getOrElse "localhost:9092",
-      args.maybe(1) getOrElse defaultTopic,
-      args.drop(2))
+    val Seq(topic, brokers, _*) = Seq(defaultTopic, "localhost:9092") zip (0 to 1) map { case (default, n) =>
+      args.maybe(n) getOrElse default
+    }
 
     // get the consumer and producer configurations
     val consumerProps = KafkaProperties.getKafkaConsumerConfig(brokers)
