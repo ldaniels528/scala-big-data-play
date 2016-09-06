@@ -32,8 +32,9 @@ object HdfsFileCopyDemo {
     * @example com.github.ldaniels528.demo.HdfsFileCopyDemo hdfs://localhost:9000/ stockQuotes.js 100000
     */
   def fileCopyDemo(args: Array[String]) = {
+    val myArgs = args.takeRight(3)
     val Seq(uri, fileName, count, _*) = defaultArgs.zipWithIndex map { case (default, n) =>
-      args.maybe(n) getOrElse default
+      myArgs.maybe(n) getOrElse default
     }
 
     // generate the quotes
